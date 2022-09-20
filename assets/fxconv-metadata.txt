@@ -1,0 +1,11 @@
+*.png:
+  type: bopti-image
+  name_regex: (.*)\.png img_\1
+
+font_help.png:
+  type: font
+  name: font_help
+  charset: print
+  grid.size: 5x7
+  grid.padding: 1
+  proportional: true
