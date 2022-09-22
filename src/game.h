@@ -25,7 +25,8 @@ along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 #define PILE_COUNT 7
 
 #define WASTE 0
-#define LEFT_PILE 1
+#define LEFTMOST_PILE 1
+#define RIGHTMOST_PILE 7
 #define FOUNDATIONS 8
 
 typedef enum {
@@ -36,7 +37,6 @@ typedef enum {
 typedef enum {
 	MOVE_INVALID,
 	MOVE_SINGLE,
-	MOVE_SINGLE_SAME_RANK,
 	MOVE_PILE
 } move_t;
 
@@ -58,6 +58,6 @@ card_t *game_get_pile_top_card(int pile_index);
 card_t *game_get_pile_bottom_card(int pile_index);
 int game_card_is_valid(card_t *card);
 void game_flip_to_waste(void);
-move_t game_validate_move(int from, int to);
+move_t game_validate_move(int from, int to, int *suit);
 int game_perform_move(int from, int to);
 void game_auto_foundations(void);

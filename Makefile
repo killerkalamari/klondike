@@ -41,7 +41,6 @@ images :=		\
 	card_back.png	\
 	card_gray.png	\
 	card.png	\
-	empty.png	\
 	font_help.png	\
 	options.png	\
 	rank.png	\

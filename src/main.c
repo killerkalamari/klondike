@@ -42,19 +42,25 @@ static void play_game(void)
 		case COMMAND_FLIP_TO_WASTE:
 			// Flip card(s) to waste
 			game_flip_to_waste();
-			move_from_waste();
-			break;
-		case COMMAND_MOVE:
-			game_perform_move(move_get_from(), move_get_to());
-			move_clear_from();
+			move_select_first();
 			break;
 		case COMMAND_AUTO_FOUNDATIONS:
 			// Automatic foundations
 			game_auto_foundations();
-			move_clear_from();
+			move_select_first();
+			break;
+		case COMMAND_PREVIOUS_MOVE:
 			// Select previous valid move
+			move_select_previous();
+			break;
+		case COMMAND_NEXT_MOVE:
 			// Select next valid move
+			move_select_next();
+			break;
+		case COMMAND_MOVE:
 			// Perform move
+			game_perform_move(move_get_from(), move_get_to());
+			move_select_first();
 			break;
 		default:
 			break;

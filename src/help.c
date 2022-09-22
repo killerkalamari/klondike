@@ -23,33 +23,24 @@ along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 #include "help.h"
 
 static const char *term[] = {
-	" SHIFT ",
-	" EXIT ",
 	" {  } ",
+	" SHIFT ",
 	" F1 ",
-	" F2 ",
-	" F5 ",
 	" F6 "
 };
 
 static const char *desc_eng[] = {
-	"Take/Move",
-	"Cancel selection",
-	"Pick pile",
+	"Select move",
+	"Move",
 	"Flip card to waste",
-	"From waste",
-	"Auto. foundations",
-	"To foundations"
+	"Auto. foundations"
 };
 
 static const char *desc_fr[] = {
-	"Choisir/D$placer",
-	"Annuler s$lection",
-	"S$lectionner pile",
+	"S$lect. d$placer",
+	"D$placer",
 	"Pioche: Suivant",
-	"Pioche: Pr$c$dent",
-	"Auto. familles",
-	"Poser sur famille"
+	"Auto. familles"
 };
 
 void help(lang_t lang)

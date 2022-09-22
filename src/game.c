@@ -138,7 +138,7 @@ card_t *game_get_pile_bottom_card(int pile_index)
 
 int game_card_is_valid(card_t *card)
 {
-	return card->rank >= 0;
+	return card && card->rank >= 0;
 }
 
 void game_flip_to_waste(void)
@@ -180,34 +180,32 @@ static int to_pile_is_valid(card_t from_card, int from_i, int to_i)
 		from_card.rank == (to_card.rank - 1);
 }
 
-static move_t single_validate_move(int from, int to)
+static move_t single_validate_move(int from, int to, int *suit)
 {
 	card_t card;
 	int from_i;
-	move_t move;
 	if (from == WASTE) {
 		from_i = FROM_INVALID;
 		if (state.waste_count < 1)
 			return MOVE_INVALID;
 		card = state.waste[0];
-		move = MOVE_SINGLE;
 	} else {
 		from_i = from - 1;
 		int pile_count = state.pile_count[from_i];
 		if (pile_count < 1)
 			return MOVE_INVALID;
 		card = state.tableau[from_i][pile_count - 1];
-		move = (pile_count > 1) ? MOVE_SINGLE_SAME_RANK : MOVE_SINGLE;
 	}
 
-	if (to == FOUNDATIONS)
+	if (to == FOUNDATIONS) {
+		if (suit)
+			*suit = card.suit;
 		return to_foundations_is_valid(card) ? MOVE_SINGLE :
 			MOVE_INVALID;
+	}
 
-	int to_i = to - 1;
-	if (MOVE_SINGLE_SAME_RANK && state.pile_count[to_i] < 1)
-		move = MOVE_SINGLE;
-	return to_pile_is_valid(card, from_i, to_i) ? move : MOVE_INVALID;
+	return to_pile_is_valid(card, from_i, to - 1) ? MOVE_SINGLE :
+							MOVE_INVALID;
 }
 
 static int pile_move_is_valid(int from, int to)
@@ -221,13 +219,13 @@ static int pile_move_is_valid(int from, int to)
 	return to_pile_is_valid(card, from_i, to - 1);
 }
 
-move_t game_validate_move(int from, int to)
+move_t game_validate_move(int from, int to, int *suit)
 {
 	if (to == from || from < WASTE || from >= FOUNDATIONS || to <= WASTE ||
 			to > FOUNDATIONS)
 		return MOVE_INVALID;
 
-	move_t move = single_validate_move(from, to);
+	move_t move = single_validate_move(from, to, suit);
 	if (move != MOVE_INVALID)
 		return move;
 
@@ -242,12 +240,11 @@ int game_perform_move(int from, int to)
 	int from_i;
 	int to_i;
 
-	move_t move = game_validate_move(from, to);
+	move_t move = game_validate_move(from, to, 0);
 	switch (move) {
 	case MOVE_INVALID:
 		return 1;
 	case MOVE_SINGLE:
-	case MOVE_SINGLE_SAME_RANK:
 		// Remove FROM card
 		if (from == WASTE) {
 			card = state.waste[0];

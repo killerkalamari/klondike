@@ -21,83 +21,22 @@ along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 #include "game.h"
 #include "move.h"
 
-#define INVALID_FROM -1
+#define INVALID_LOCATION -1
 #define DIR_LEFT -1
 #define DIR_RIGHT 1
 
 struct move_state {
 	int from;
 	int to;
-	int pile;
+	int is_entire_pile;
+	int suit;
 };
 
 static struct move_state state;
 
-static int valid_from(int from)
-{
-	for (int i = 1; i <= FOUNDATIONS; ++i)
-		if (game_validate_move(from, i) != MOVE_INVALID)
-			return 1;
-	return 0;
-}
-
-static void find_valid_pile(int dir, int allow_same_rank)
-{
-	int pile = state.pile;
-	for (int i = 0; i <= PILE_COUNT; ++i) {
-		pile += dir;
-		if (pile <= WASTE)
-			pile = PILE_COUNT;
-		if (pile > PILE_COUNT)
-			pile = LEFT_PILE;
-		if (move_from_is_set()) {
-			move_t move = game_validate_move(state.from, pile);
-			if (move != MOVE_INVALID && (
-					move != MOVE_SINGLE_SAME_RANK ||
-					allow_same_rank)) {
-				state.pile = pile;
-				return;
-			}
-		} else if (valid_from(pile)) {
-			state.pile = pile;
-			return;
-		}
-	}
-	state.pile = 0;
-}
-
-static void pick_pile(void)
-{
-	state.pile = 0;
-	find_valid_pile(DIR_RIGHT, 0);
-	if (state.pile == 0 && !move_from_is_set() && valid_from(WASTE)) {
-		state.from = WASTE;
-		find_valid_pile(DIR_RIGHT, 0);
-		return;
-	}
-	find_valid_pile(DIR_RIGHT, 1);
-}
-
 void move_init(void)
 {
-	move_clear_from();
-	pick_pile();
-}
-
-void move_from_waste(void)
-{
-	if (valid_from(WASTE)) {
-		state.from = WASTE;
-		pick_pile();
-	} else {
-		move_clear_from();
-	}
-}
-
-void move_from_pile(void)
-{
-	state.from = state.pile;
-	pick_pile();
+	move_select_first();
 }
 
 int move_get_from(void)
@@ -105,15 +44,9 @@ int move_get_from(void)
 	return state.from;
 }
 
-void move_clear_from(void)
+int move_get_to(void)
 {
-	state.from = INVALID_FROM;
-	pick_pile();
-}
-
-int move_from_is_set(void)
-{
-	return state.from >= WASTE;
+	return state.to;
 }
 
 int move_is_from_waste(void)
@@ -121,37 +54,75 @@ int move_is_from_waste(void)
 	return state.from == WASTE;
 }
 
-void move_to_foundations(void)
+int move_is_to_foundations(int suit)
 {
-	state.to = FOUNDATIONS;
+	return state.to == FOUNDATIONS && state.suit == suit;
 }
 
-void move_to_pile(void)
+int move_is_entire_pile(void)
 {
-	state.to = state.pile;
+	return state.is_entire_pile;
 }
 
-int move_get_to(void)
+static void adjust_from(int dir)
 {
-	return state.to;
+	state.from += dir;
+	if (state.from < WASTE)
+		state.from = RIGHTMOST_PILE;
+	if (state.from >= FOUNDATIONS)
+		state.from = WASTE;
 }
 
-int move_get_pile(void)
+static void adjust_to(int dir)
 {
-	return state.pile;
+	state.to += dir;
+	if (state.to <= WASTE) {
+		state.to = FOUNDATIONS;
+		adjust_from(dir);
+	}
+	if (state.to > FOUNDATIONS) {
+		state.to = LEFTMOST_PILE;
+		adjust_from(dir);
+	}
 }
 
-int move_pile_is_valid(void)
+static void find_valid_move(int dir)
 {
-	return state.pile >= 1 && state.pile <= PILE_COUNT;
+	if (state.from == INVALID_LOCATION || state.to == INVALID_LOCATION)
+		return;
+
+	int old_from = state.from;
+	int old_to = state.to;
+	do {
+		int suit = 0;
+		move_t move = game_validate_move(state.from, state.to, &suit);
+		if (move != MOVE_INVALID) {
+			state.is_entire_pile = (move == MOVE_PILE);
+			state.suit = suit;
+			return;
+		}
+		adjust_to(dir);
+	} while (state.from != old_from || state.to != old_to);
+
+	state.from = INVALID_LOCATION;
+	state.to = INVALID_LOCATION;
 }
 
-void move_previous_valid_pile(void)
+void move_select_first(void)
 {
-	find_valid_pile(DIR_LEFT, 1);
+	state.from = WASTE;
+	state.to = LEFTMOST_PILE;
+	find_valid_move(DIR_RIGHT);
 }
 
-void move_next_valid_pile(void)
+void move_select_previous(void)
 {
-	find_valid_pile(DIR_RIGHT, 1);
+	adjust_to(DIR_LEFT);
+	find_valid_move(DIR_LEFT);
+}
+
+void move_select_next(void)
+{
+	adjust_to(DIR_RIGHT);
+	find_valid_move(DIR_RIGHT);
 }

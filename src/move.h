@@ -21,16 +21,11 @@ along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 #pragma once
 
 void move_init(void);
-void move_from_waste(void);
-void move_from_pile(void);
 int move_get_from(void);
-void move_clear_from(void);
-int move_from_is_set(void);
-int move_is_from_waste(void);
-void move_to_foundations(void);
-void move_to_pile(void);
 int move_get_to(void);
-int move_get_pile(void);
-int move_pile_is_valid(void);
-void move_previous_valid_pile(void);
-void move_next_valid_pile(void);
+int move_is_from_waste(void);
+int move_is_to_foundations(int suit);
+int move_is_entire_pile(void);
+void move_select_first(void);
+void move_select_previous(void);
+void move_select_next(void);

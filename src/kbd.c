@@ -20,7 +20,6 @@ along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <gint/keyboard.h>
 #include <gint/usb-ff-bulk.h>
-#include "move.h"
 #include "kbd.h"
 
 #define KEY_EXE    21
@@ -62,38 +61,15 @@ command_t kbd_game_input(void)
 			return COMMAND_OPTIONS_MENU;
 		case KEY_F1:
 			return COMMAND_FLIP_TO_WASTE;
-		case KEY_F2:
-			move_from_waste();
-			return COMMAND_NONE;
-		case KEY_F5:
-			return COMMAND_AUTO_FOUNDATIONS;
 		case KEY_F6:
-			if (move_from_is_set()) {
-				move_to_foundations();
-				return COMMAND_MOVE;
-			}
-			break;
+			return COMMAND_AUTO_FOUNDATIONS;
 		case KEY_LEFT:
-			move_previous_valid_pile();
-			return COMMAND_NONE;
+			return COMMAND_PREVIOUS_MOVE;
 		case KEY_RIGHT:
-			move_next_valid_pile();
-			return COMMAND_NONE;
+			return COMMAND_NEXT_MOVE;
 		case KEY_SHIFT:
 		case KEY_EXE:
-			if (!move_pile_is_valid())
-				break;
-
-			if (move_from_is_set()) {
-				move_to_pile();
-				return COMMAND_MOVE;
-			}
-
-			move_from_pile();
-			return COMMAND_NONE;
-		case KEY_EXIT:
-			move_clear_from();
-			return COMMAND_NONE;
+			return COMMAND_MOVE;
 		case KEY_7:
 			// Take screenshot
 			take_screenshot();
