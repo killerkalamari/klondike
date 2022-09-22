@@ -28,20 +28,26 @@ command_t options(void)
 	display_options();
 	switch (kbd_options_input()) {
 	case COMMAND_NEW_GAME:
+		// Start a new game
 		return COMMAND_NEW_GAME;
 	case COMMAND_FLIP_1:
+		// Flip 1 card at a time to waste
 		game_set_flip(FLIP_1);
 		break;
 	case COMMAND_FLIP_3:
+		// Flip 3 cards at a time to waste
 		game_set_flip(FLIP_3);
 		break;
 	case COMMAND_HELP_ENG:
+		// Display help in English
 		help(LANG_ENGLISH);
 		break;
 	case COMMAND_HELP_FR:
+		// Display help in French
 		help(LANG_FRENCH);
 		break;
 	default:
+		// Exit options menu
 		break;
 	}
 	return COMMAND_NONE;

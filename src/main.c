@@ -35,10 +35,12 @@ static void play_game(void)
 		display_game();
 		switch(kbd_game_input()) {
 		case COMMAND_OPTIONS_MENU:
+			// Show options menu
 			if (options() == COMMAND_NEW_GAME)
 				continue_game = 0;
 			break;
 		case COMMAND_FLIP_TO_WASTE:
+			// Flip card(s) to waste
 			game_flip_to_waste();
 			move_from_waste();
 			break;
@@ -47,8 +49,12 @@ static void play_game(void)
 			move_clear_from();
 			break;
 		case COMMAND_AUTO_FOUNDATIONS:
+			// Automatic foundations
 			game_auto_foundations();
 			move_clear_from();
+			// Select previous valid move
+			// Select next valid move
+			// Perform move
 			break;
 		default:
 			break;

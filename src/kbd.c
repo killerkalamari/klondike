@@ -55,36 +55,28 @@ command_t kbd_game_input(void)
 	while (1) {
 		switch (getkey_opt(0xCC, NULL).key) {
 		case KEY_OPTN:
-			// Show options menu
 			return COMMAND_OPTIONS_MENU;
 		case KEY_F1:
-			// Turn card(s) to waste
 			return COMMAND_FLIP_TO_WASTE;
 		case KEY_F2:
-			// From waste
 			move_from_waste();
 			return COMMAND_NONE;
 		case KEY_F5:
-			// Automatic foundations
 			return COMMAND_AUTO_FOUNDATIONS;
 		case KEY_F6:
-			// To foundations
 			if (move_from_is_set()) {
 				move_to_foundations();
 				return COMMAND_MOVE;
 			}
 			break;
 		case KEY_LEFT:
-			// Move cursor to previous valid tableau pile
 			move_previous_valid_pile();
 			return COMMAND_NONE;
 		case KEY_RIGHT:
-			// Move cursor to next valid tableau pile
 			move_next_valid_pile();
 			return COMMAND_NONE;
 		case KEY_SHIFT:
 		case KEY_EXE:
-			// From/to tableau pile at cursor
 			if (!move_pile_is_valid())
 				break;
 
@@ -96,11 +88,10 @@ command_t kbd_game_input(void)
 			move_from_pile();
 			return COMMAND_NONE;
 		case KEY_EXIT:
-			// Cancel current selection, if any
 			move_clear_from();
 			return COMMAND_NONE;
 		case KEY_7:
-			// Take screenshot (instructions at top)
+			// Take screenshot
 			usb_fxlink_screenshot(1);
 			break;
 		}
@@ -112,22 +103,17 @@ command_t kbd_options_input(void)
 	while (1) {
 		switch (getkey_opt(0xCC, NULL).key) {
 		case KEY_F1:
-			// Start a new game
 			return COMMAND_NEW_GAME;
 		case KEY_F2:
-			// Flip 1 card at a time to waste
 			return COMMAND_FLIP_1;
 		case KEY_F3:
-			// Flip 3 cards at a time to waste
 			return COMMAND_FLIP_3;
 		case KEY_F5:
-			// Display help in English
 			return COMMAND_HELP_ENG;
 		case KEY_F6:
-			// Display help in French
 			return COMMAND_HELP_FR;
 		case KEY_7:
-			// Take screenshot (instructions at top)
+			// Take screenshot
 			usb_fxlink_screenshot(1);
 			break;
 		case KEY_EXIT:
@@ -142,7 +128,7 @@ void kbd_help_input(void)
 	while (1) {
 		switch (getkey_opt(0xDC, NULL).key) {
 		case KEY_7:
-			// Take screenshot (instructions at top)
+			// Take screenshot
 			usb_fxlink_screenshot(1);
 			break;
 		case KEY_EXIT:
