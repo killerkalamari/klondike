@@ -17,7 +17,7 @@
 # along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 
 name := Klondike
-version := 1.0
+version := 1.1
 
 headers :=		\
 	src/display.h	\
@@ -58,7 +58,7 @@ libs := $(shell $(CC) -print-file-name=libgint-fx.a) \
 objs := $(srcs:%=build/%.o) $(images:%=build/%.o)
 elf := build/$(name).elf
 bin := build/$(name).bin
-filename := $(name)-$(version).g1a
+filename := $(name).g1a
 add_in := build/$(filename)
 
 .PHONY: all
