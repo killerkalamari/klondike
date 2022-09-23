@@ -17,7 +17,7 @@
 # along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 
 name := Klondike
-version := 1.1
+version := 1.2
 
 headers :=		\
 	src/display.h	\
@@ -64,7 +64,7 @@ add_in := build/$(filename)
 .PHONY: all
 all: $(add_in)
 
-$(add_in): $(bin) $(icon)
+$(add_in): $(bin) $(icon) Makefile
 	fxgxa --g1a -n $(name) -i $(icon) --version="$(version)" -o $@ $<
 
 $(bin): $(elf)
