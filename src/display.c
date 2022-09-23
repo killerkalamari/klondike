@@ -132,7 +132,7 @@ void display_options(void)
 	dupdate();
 }
 
-void display_help(const char *term[], const char *desc[], int count)
+void display_help(const char *keys[], const char *desc[], int count)
 {
 	dfont(&font_help);
 	dclear(C_WHITE);
@@ -140,7 +140,7 @@ void display_help(const char *term[], const char *desc[], int count)
 	for (int i = 0; i < count; ++i) {
 		int y = 8 * i + 2;
 		dtext_opt(0, y, C_WHITE, C_BLACK, DTEXT_LEFT, DTEXT_TOP,
-				term[i]);
+				keys[i]);
 		dtext(31, y, C_BLACK, desc[i]);
 	}
 	dupdate();

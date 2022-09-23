@@ -22,11 +22,18 @@ along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 #include "kbd.h"
 #include "help.h"
 
-static const char *term[] = {
+static const char *keys_std[] = {
 	" {  } ",
 	" SHIFT ",
 	" F1 ",
 	" F6 "
+};
+
+static const char *keys_slim[] = {
+	" {  } ",
+	" ^ ",
+	" ~ ",
+	" | "
 };
 
 static const char *desc_eng[] = {
@@ -45,18 +52,24 @@ static const char *desc_fr[] = {
 
 void help(lang_t lang)
 {
+	const char **keys;
 	const char **desc;
 	switch (lang) {
 	case LANG_FRENCH:
+		keys = keys_std;
 		desc = desc_fr;
 		break;
+	case LANG_ENGLISH_SLIM:
+		keys = keys_slim;
+		desc = desc_eng;
+		break;
 	default:
+		keys = keys_std;
 		desc = desc_eng;
 		break;
 	}
 
-	int count = (sizeof term / sizeof (char *));
-
-	display_help(term, desc, count);
+	int count = (sizeof keys_std / sizeof (char *));
+	display_help(keys, desc, count);
 	kbd_help_input();
 }
