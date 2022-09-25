@@ -20,32 +20,8 @@ along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 
 #include <gint/keyboard.h>
 #include <gint/usb-ff-bulk.h>
+#include <gint/hardware.h>
 #include "kbd.h"
-
-#define KEY_EXE    21
-#define KEY_7      65
-#define KEY_EXIT  116
-#define KEY_RIGHT 118
-#define KEY_SHIFT 129
-#define KEY_OPTN  130
-#define KEY_LEFT  133
-#define KEY_F1    145
-#define KEY_F2    146
-#define KEY_F3    147
-#define KEY_F5    149
-#define KEY_F6    150
-
-#define KEY_SLIM_EXE     5
-#define KEY_SLIM_ACON   23
-#define KEY_SLIM_EXIT   49
-#define KEY_SLIM_F2     97
-#define KEY_SLIM_OPTN  100
-#define KEY_SLIM_DOWN  101
-#define KEY_SLIM_RIGHT 102
-#define KEY_SLIM_F3    113
-#define KEY_SLIM_HELP  117
-#define KEY_SLIM_POWER 148
-#define KEY_SLIM_LEFT  149
 
 void kbd_init(void)
 {
@@ -65,81 +41,118 @@ static void take_screenshot(void)
 		usb_fxlink_screenshot(1);
 }
 
+static uint kbd_getkey(void)
+{
+	return getkey_opt(GETKEY_BACKLIGHT | GETKEY_MENU, NULL).key;
+}
+
 command_t kbd_game_input(void)
 {
 	while (1) {
-		switch (getkey_opt(0xCC, NULL).key) {
-		case KEY_OPTN:
-		case KEY_SLIM_OPTN:
-			return COMMAND_OPTIONS_MENU;
-		case KEY_F1: /* KEY_SLIM_F1 */
-		case KEY_SLIM_DOWN:
-			return COMMAND_FLIP_TO_WASTE;
-		case KEY_F6: /* KEY_SLIM_UP */
-			return COMMAND_AUTO_FOUNDATIONS;
-		case KEY_LEFT:
-		case KEY_SLIM_LEFT:
-			return COMMAND_PREVIOUS_MOVE;
-		case KEY_RIGHT:
-		case KEY_SLIM_RIGHT:
-			return COMMAND_NEXT_MOVE;
-		case KEY_SHIFT:
-		case KEY_EXE:
-		case KEY_SLIM_POWER:
-		case KEY_SLIM_EXE:
-			return COMMAND_MOVE;
-		case KEY_SLIM_HELP:
-			return COMMAND_HELP_ENG_SLIM;
-		case KEY_SLIM_ACON:
-			return COMMAND_TERMINATE;
-		case KEY_7:
-			// Take screenshot
-			take_screenshot();
-			break;
-		}
+		uint key = kbd_getkey();
+		if (isSlim())
+			switch (key) {
+			case KEY_OPTN:
+				return COMMAND_OPTIONS_MENU;
+			case KEY_F1:
+				return COMMAND_FLIP_TO_WASTE;
+			case KEY_UP:
+				return COMMAND_AUTO_FOUNDATIONS;
+			case KEY_LEFT:
+				return COMMAND_PREVIOUS_MOVE;
+			case KEY_RIGHT:
+				return COMMAND_NEXT_MOVE;
+			case KEY_POWER:
+			case KEY_EXE:
+				return COMMAND_MOVE;
+			case KEY_HELP:
+				return COMMAND_HELP_ENG_SLIM;
+			}
+		else
+			switch (key) {
+			case KEY_OPTN:
+				return COMMAND_OPTIONS_MENU;
+			case KEY_F1:
+				return COMMAND_FLIP_TO_WASTE;
+			case KEY_F6:
+				return COMMAND_AUTO_FOUNDATIONS;
+			case KEY_LEFT:
+				return COMMAND_PREVIOUS_MOVE;
+			case KEY_RIGHT:
+				return COMMAND_NEXT_MOVE;
+			case KEY_SHIFT:
+			case KEY_EXE:
+				return COMMAND_MOVE;
+			case KEY_7:
+				// Take screenshot
+				take_screenshot();
+				break;
+			}
 	}
 }
 
 command_t kbd_options_input(void)
 {
 	while (1) {
-		switch (getkey_opt(0xCC, NULL).key) {
-		case KEY_F1: /* KEY_SLIM_F1 */
-			return COMMAND_NEW_GAME;
-		case KEY_F2:
-		case KEY_SLIM_F2:
-			return COMMAND_FLIP_1;
-		case KEY_F3:
-		case KEY_SLIM_F3:
-			return COMMAND_FLIP_3;
-		case KEY_F5:
-			return COMMAND_HELP_ENG;
-		case KEY_F6:
-			return COMMAND_HELP_FR;
-		case KEY_7:
-			// Take screenshot
-			take_screenshot();
-			break;
-		case KEY_EXIT:
-		case KEY_SLIM_EXIT:
-			// Exit options menu
-			return COMMAND_EXIT;
-		}
+		uint key = kbd_getkey();
+		if (isSlim())
+			switch (key) {
+			case KEY_F1:
+				return COMMAND_NEW_GAME;
+			case KEY_F2:
+				return COMMAND_FLIP_1;
+			case KEY_F3:
+				return COMMAND_FLIP_3;
+			case KEY_F5:
+				return COMMAND_HELP_ENG_SLIM;
+			case KEY_F6:
+				return COMMAND_HELP_FR_SLIM;
+			case KEY_EXIT:
+				// Exit options menu
+				return COMMAND_EXIT;
+			}
+		else
+			switch (key) {
+			case KEY_F1:
+				return COMMAND_NEW_GAME;
+			case KEY_F2:
+				return COMMAND_FLIP_1;
+			case KEY_F3:
+				return COMMAND_FLIP_3;
+			case KEY_F5:
+				return COMMAND_HELP_ENG;
+			case KEY_F6:
+				return COMMAND_HELP_FR;
+			case KEY_7:
+				// Take screenshot
+				take_screenshot();
+				break;
+			case KEY_EXIT:
+				// Exit options menu
+				return COMMAND_EXIT;
+			}
 	}
 }
 
 void kbd_help_input(void)
 {
 	while (1) {
-		switch (getkey_opt(0xDC, NULL).key) {
-		case KEY_7:
-			// Take screenshot
-			take_screenshot();
-			break;
-		case KEY_EXIT:
-		case KEY_SLIM_EXIT:
-			// Exit help
-			return;
-		}
+		uint key = kbd_getkey();
+		if (isSlim())
+			switch (key) {
+			case KEY_EXIT:
+				// Exit help
+				return;
+			}
+		else
+			switch (key) {
+			case KEY_7:
+				// Take screenshot
+				take_screenshot();
+				break;
+			case KEY_EXIT:
+				// Exit help
+				return;
+			}
 	}
 }

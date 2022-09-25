@@ -46,6 +46,14 @@ command_t options(void)
 		// Display help in French
 		help(LANG_FRENCH);
 		break;
+	case COMMAND_HELP_ENG_SLIM:
+		// Display Slim help in English
+		help(LANG_ENGLISH_SLIM);
+		break;
+	case COMMAND_HELP_FR_SLIM:
+		// Display SLim help in French
+		help(LANG_FRENCH_SLIM);
+		break;
 	default:
 		// Exit options menu
 		break;

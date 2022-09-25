@@ -26,7 +26,7 @@ along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 #include "options.h"
 #include "random.h"
 
-static int play_game(void)
+static void play_game(void)
 {
 	game_init();
 	move_init();
@@ -66,13 +66,10 @@ static int play_game(void)
 			// Display Slim help in English
 			help(LANG_ENGLISH_SLIM);
 			break;
-		case COMMAND_TERMINATE:
-			return 0;
 		default:
 			break;
 		}
 	}
-	return 1;
 }
 
 int main(void)
@@ -81,6 +78,6 @@ int main(void)
 	kbd_init();
 	game_set_flip(FLIP_1);
 
-	while (play_game());
-	return 1;
+	while (1)
+		play_game();
 }

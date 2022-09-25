@@ -23,7 +23,8 @@ along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 typedef enum {
 	LANG_ENGLISH,
 	LANG_FRENCH,
-	LANG_ENGLISH_SLIM
+	LANG_ENGLISH_SLIM,
+	LANG_FRENCH_SLIM
 } lang_t;
 
 void help(lang_t lang);

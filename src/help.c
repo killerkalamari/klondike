@@ -55,6 +55,10 @@ void help(lang_t lang)
 	const char **keys;
 	const char **desc;
 	switch (lang) {
+	case LANG_ENGLISH:
+		keys = keys_std;
+		desc = desc_eng;
+		break;
 	case LANG_FRENCH:
 		keys = keys_std;
 		desc = desc_fr;
@@ -63,10 +67,12 @@ void help(lang_t lang)
 		keys = keys_slim;
 		desc = desc_eng;
 		break;
-	default:
-		keys = keys_std;
-		desc = desc_eng;
+	case LANG_FRENCH_SLIM:
+		keys = keys_slim;
+		desc = desc_fr;
 		break;
+	default:
+		return;
 	}
 
 	int count = (sizeof keys_std / sizeof (char *));
