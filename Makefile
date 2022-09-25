@@ -17,7 +17,7 @@
 # along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 
 name := Klondike
-version := 1.2
+version := 1.3
 
 headers :=		\
 	src/display.h	\
