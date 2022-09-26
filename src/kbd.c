@@ -54,7 +54,7 @@ command_t kbd_game_input(void)
 			switch (key) {
 			case KEY_OPTN:
 				return COMMAND_OPTIONS_MENU;
-			case KEY_F1:
+			case KEY_DOWN:
 				return COMMAND_FLIP_TO_WASTE;
 			case KEY_UP:
 				return COMMAND_AUTO_FOUNDATIONS;
