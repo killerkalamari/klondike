@@ -35,15 +35,16 @@ How to take an in-game screenshot:
 2. Connect the calculator via USB then press EXIT (don't press F1 - F3)
 3. Press "7" in the game
 */
-static void take_screenshot(void)
-{
-	if (usb_is_open())
-		usb_fxlink_screenshot(1);
-}
-
 static uint kbd_getkey(void)
 {
-	return getkey_opt(GETKEY_BACKLIGHT | GETKEY_MENU, NULL).key;
+	uint key = getkey_opt(GETKEY_BACKLIGHT | GETKEY_MENU, NULL).key;
+	if (key == KEY_7) {
+		// Take screenshot
+		if (usb_is_open())
+			usb_fxlink_screenshot(1);
+		return 0;
+	}
+	return key;
 }
 
 command_t kbd_game_input(void)
@@ -83,10 +84,6 @@ command_t kbd_game_input(void)
 			case KEY_SHIFT:
 			case KEY_EXE:
 				return COMMAND_MOVE;
-			case KEY_7:
-				// Take screenshot
-				take_screenshot();
-				break;
 			}
 	}
 }
@@ -123,10 +120,6 @@ command_t kbd_options_input(void)
 				return COMMAND_HELP_ENG;
 			case KEY_F6:
 				return COMMAND_HELP_FR;
-			case KEY_7:
-				// Take screenshot
-				take_screenshot();
-				break;
 			case KEY_EXIT:
 				// Exit options menu
 				return COMMAND_EXIT;
@@ -136,23 +129,5 @@ command_t kbd_options_input(void)
 
 void kbd_help_input(void)
 {
-	while (1) {
-		uint key = kbd_getkey();
-		if (isSlim())
-			switch (key) {
-			case KEY_EXIT:
-				// Exit help
-				return;
-			}
-		else
-			switch (key) {
-			case KEY_7:
-				// Take screenshot
-				take_screenshot();
-				break;
-			case KEY_EXIT:
-				// Exit help
-				return;
-			}
-	}
+	while (kbd_getkey() != KEY_EXIT);
 }
