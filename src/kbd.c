@@ -21,6 +21,7 @@ along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 #include <gint/keyboard.h>
 #include <gint/usb-ff-bulk.h>
 #include <gint/hardware.h>
+#include "syscall.h"
 #include "kbd.h"
 
 void kbd_init(void)
@@ -51,6 +52,10 @@ command_t kbd_game_input(void)
 {
 	while (1) {
 		uint key = kbd_getkey();
+		if (key == KEY_ACON) {
+			syscall_power_off();
+			return COMMAND_NONE;
+		}
 		if (isSlim())
 			switch (key) {
 			case KEY_OPTN:
