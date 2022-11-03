@@ -26,7 +26,6 @@ headers :=		\
 	src/kbd.h	\
 	src/move.h	\
 	src/random.h	\
-	src/syscall.h
 
 srcs :=			\
 	display.c	\
@@ -37,7 +36,6 @@ srcs :=			\
 	move.c		\
 	options.c	\
 	random.c	\
-	syscall.c
 
 images :=		\
 	card_back.png	\

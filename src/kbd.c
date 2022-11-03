@@ -18,16 +18,33 @@ You should have received a copy of the GNU General Public License
 along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include <gint/gint.h>
+#include <gint/hardware.h>
 #include <gint/keyboard.h>
 #include <gint/usb-ff-bulk.h>
-#include <gint/hardware.h>
-#include "syscall.h"
 #include "kbd.h"
 
 void kbd_init(void)
 {
 	usb_interface_t const *interfaces[] = { &usb_ff_bulk, NULL };
 	usb_open(interfaces, GINT_CALL_NULL);
+}
+
+static void power_off(void)
+{
+	asm volatile(
+		"\n	mov	#1,r4"
+		"\n	mov.l	poweroff_%=,r0"
+		"\n	mov.l	syscall_%=,r2"
+		"\n	jmp	@r2"
+		"\n	nop"
+		"\n	.align 4"
+		"\npoweroff_%=:"
+		"\n	.long	0x3F4"
+		"\nsyscall_%=:"
+		"\n	.long	0x80010070"
+		:
+	);
 }
 
 /*
@@ -53,7 +70,10 @@ command_t kbd_game_input(void)
 	while (1) {
 		uint key = kbd_getkey();
 		if (key == KEY_ACON) {
-			syscall_power_off();
+			gint_world_switch((gint_call_t) {
+				.function = (void *)power_off,
+				.args = {}
+			});
 			return COMMAND_NONE;
 		}
 		if (isSlim())
