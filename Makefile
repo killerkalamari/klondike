@@ -97,6 +97,10 @@ install: $(add_in)
 	cp -v $(add_in) "$$DEST"/; \
 	eject "$$DEST" 2>/dev/null || true
 
+.PHONY: p7
+p7: $(add_in)
+	p7 send $(add_in)
+
 .PHONY: clean
 clean:
 	$(RM) -r build/

@@ -22,6 +22,7 @@ along with Klondike Solitaire.  If not, see <https://www.gnu.org/licenses/>.
 #include <gint/hardware.h>
 #include <gint/keyboard.h>
 #include <gint/usb-ff-bulk.h>
+#include <gint/drivers/t6k11.h>
 #include "kbd.h"
 
 void kbd_init(void)
@@ -127,6 +128,9 @@ command_t kbd_options_input(void)
 				return COMMAND_FLIP_1;
 			case KEY_F3:
 				return COMMAND_FLIP_3;
+			case KEY_F4:
+				t6k11_backlight(-1);
+				return COMMAND_EXIT;
 			case KEY_F5:
 				return COMMAND_HELP_ENG_SLIM;
 			case KEY_F6:
@@ -143,6 +147,9 @@ command_t kbd_options_input(void)
 				return COMMAND_FLIP_1;
 			case KEY_F3:
 				return COMMAND_FLIP_3;
+			case KEY_F4:
+				t6k11_backlight(-1);
+				return COMMAND_EXIT;
 			case KEY_F5:
 				return COMMAND_HELP_ENG;
 			case KEY_F6:
