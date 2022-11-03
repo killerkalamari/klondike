@@ -69,6 +69,8 @@ command_t kbd_game_input(void)
 			case KEY_RIGHT:
 				return COMMAND_NEXT_MOVE;
 			case KEY_POWER:
+			case KEY_SHIFT:
+			case KEY_ALPHA:
 			case KEY_EXE:
 				return COMMAND_MOVE;
 			case KEY_HELP:
